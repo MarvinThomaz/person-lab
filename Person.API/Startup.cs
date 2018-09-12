@@ -56,16 +56,6 @@ namespace Person.API
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseException();
-
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
-            }
-
             app.UseSwagger();
             app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "Store - Product - v1"));
             app.UseHttpsRedirection();
