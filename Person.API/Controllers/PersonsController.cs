@@ -20,11 +20,11 @@ namespace Person.API.Controllers
 
         [HttpPost]
         [SwaggerRequestExample(typeof(CreatePersonModel), typeof(CreatePersonModelExample))]
-        public async Task<IActionResult> Post([FromBody] CreatePersonModel model, [FromServices] ICreatePersonModelToPersonMapper mapper)
+        public async Task<IActionResult> PostAsync([FromBody] CreatePersonModel model, [FromServices] ICreatePersonModelToPersonMapper mapper)
         {
             var entity = mapper.Map(model);
 
-            await _service.CreatePerson(entity);
+            await _service.CreatePersonAsync(entity);
 
             return Created($"/api/persons/{entity.Key}", model);
         }
@@ -32,29 +32,29 @@ namespace Person.API.Controllers
         [HttpPut]
         [Route("{key}")]
         [SwaggerRequestExample(typeof(UpdatePersonModel), typeof(UpdatePersonModelExample))]
-        public async Task<IActionResult> Put(string key, [FromBody] UpdatePersonModel model, [FromServices] IUpdatePersonModelToPersonMapper mapper)
+        public async Task<IActionResult> PutAsync(string key, [FromBody] UpdatePersonModel model, [FromServices] IUpdatePersonModelToPersonMapper mapper)
         {
             var entity = mapper.Map(model);
 
-            await _service.UpdatePerson(entity, key);
+            await _service.UpdatePersonAsync(entity, key);
 
             return Ok();
         }
 
         [HttpDelete]
         [Route("{key}")]
-        public async Task<IActionResult> Delete(string key)
+        public async Task<IActionResult> DeleteAsync(string key)
         {
-            await _service.DeletePerson(key);
+            await _service.DeletePersonAsync(key);
 
             return NoContent();
         }
 
         [HttpGet]
         [Route("{key}")]
-        public async Task<IActionResult> Get(string key)
+        public async Task<IActionResult> GetAsync(string key)
         {
-            var entity = await _service.GetPersonByKey(key);
+            var entity = await _service.GetPersonByKeyAsync(key);
 
             if (entity != null)
                 return Ok(entity);
@@ -63,9 +63,9 @@ namespace Person.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAsync()
         {
-            var list = await _service.GetAllPersons();
+            var list = await _service.GetAllPersonsAsync();
 
             return Ok(list);
         }

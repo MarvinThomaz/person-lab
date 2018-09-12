@@ -20,29 +20,29 @@ namespace Person.Infrastructure.Repositories
             _transactionManager = transactionManager;
         }
 
-        public async Task CreatePerson(Domain.Entities.Person person)
+        public async Task CreatePersonAsync(Domain.Entities.Person person)
         {
             await _connection.QueryAsync(CreatePersonQuery.Query, person, _transactionManager.GetCurrentTransaction());
         }
 
-        public async Task DeletePerson(string key)
+        public async Task DeletePersonAsync(string key)
         {
             await _connection.QueryAsync(DeletePersonQuery.Query, new { Key = key }, _transactionManager.GetCurrentTransaction());
         }
 
-        public async Task<IEnumerable<Domain.Entities.Person>> GetAllPersons()
+        public async Task<IEnumerable<Domain.Entities.Person>> GetAllPersonsAsync()
         {
             return await _connection.QueryAsync<Domain.Entities.Person>(GetAllPersonsQuery.Query, transaction: _transactionManager.GetCurrentTransaction());
         }
 
-        public async Task<Domain.Entities.Person> GetPersonByKey(string key)
+        public async Task<Domain.Entities.Person> GetPersonByKeyAsync(string key)
         {
             var result = await _connection.QueryAsync<Domain.Entities.Person>(GetPersonByKeyQuery.Query, new { Key = key }, _transactionManager.GetCurrentTransaction());
 
             return result.FirstOrDefault();
         }
 
-        public async Task UpdatePerson(Domain.Entities.Person person, string key)
+        public async Task UpdatePersonAsync(Domain.Entities.Person person, string key)
         {
             await _connection.QueryAsync(UpdatePersonQuery.Query, new { Name = person.Name, Age = person.Age, Key = key }, _transactionManager.GetCurrentTransaction());
         }

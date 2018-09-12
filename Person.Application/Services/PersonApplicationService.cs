@@ -15,40 +15,40 @@ namespace Person.Application.Services
             _repository = repository;
         }
 
-        public async Task CreatePerson(Domain.Entities.Person person)
+        public async Task CreatePersonAsync(Domain.Entities.Person person)
         {
             ValidatePerson(person);
 
-            await _repository.CreatePerson(person);
+            await _repository.CreatePersonAsync(person);
         }
 
-        public async Task DeletePerson(string key)
+        public async Task DeletePersonAsync(string key)
         {
             if (key != null)
-                await _repository.DeletePerson(key);
+                await _repository.DeletePersonAsync(key);
         }
 
-        public async Task<IEnumerable<Domain.Entities.Person>> GetAllPersons()
+        public async Task<IEnumerable<Domain.Entities.Person>> GetAllPersonsAsync()
         {
-            return await _repository.GetAllPersons();
+            return await _repository.GetAllPersonsAsync();
         }
 
-        public async Task<Domain.Entities.Person> GetPersonByKey(string key)
+        public async Task<Domain.Entities.Person> GetPersonByKeyAsync(string key)
         {
             if (key == null)
                 return null;
 
-            return await _repository.GetPersonByKey(key);
+            return await _repository.GetPersonByKeyAsync(key);
         }
 
-        public async Task UpdatePerson(Domain.Entities.Person person, string key)
+        public async Task UpdatePersonAsync(Domain.Entities.Person person, string key)
         {
             if (key == null)
                 return;
 
             ValidatePerson(person);
 
-            await _repository.UpdatePerson(person, key);
+            await _repository.UpdatePersonAsync(person, key);
         }
 
         private static void ValidatePerson(Domain.Entities.Person person)
