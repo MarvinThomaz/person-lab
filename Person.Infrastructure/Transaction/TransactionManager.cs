@@ -17,6 +17,9 @@ namespace Person.Infrastructure.Transaction
 
         public IDisposable Begin()
         {
+            if (_connection.State == ConnectionState.Closed)
+                _connection.Open();
+
             _transaction = _connection.BeginTransaction();
 
             return _transaction;
