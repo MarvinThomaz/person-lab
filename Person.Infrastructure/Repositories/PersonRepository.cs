@@ -1,50 +1,48 @@
-﻿using Dapper;
-using Person.Common.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
 using Person.Domain.Repositories;
-using Person.Infrastructure.Queries;
+using Person.Infrastructure.Context;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Person.Infrastructure.Repositories
 {
     public class PersonRepository : IPersonRepository
     {
-        private readonly IDbConnection _connection;
-        private readonly ITransactionManager _transactionManager;
+        private readonly DbContext _context;
 
-        public PersonRepository(IDbConnection connection, ITransactionManager transactionManager)
+        public PersonRepository(PersonDbContext context)
         {
-            _connection = connection;
-            _transactionManager = transactionManager;
+            _context = context;
         }
 
         public async Task CreatePersonAsync(Domain.Entities.Person person)
         {
-            await _connection.QueryAsync(CreatePersonQuery.Query, person, _transactionManager.GetCurrentTransaction());
+            await _context.AddAsync(person);
         }
 
         public async Task DeletePersonAsync(string key)
         {
-            await _connection.QueryAsync(DeletePersonQuery.Query, new { Key = key }, _transactionManager.GetCurrentTransaction());
+            var person = await _context.Set<Domain.Entities.Person>().FirstOrDefaultAsync(p => p.Key == key);
+
+            if (person != null)
+                _context.Remove(person);
         }
 
         public async Task<IEnumerable<Domain.Entities.Person>> GetAllPersonsAsync()
         {
-            return await _connection.QueryAsync<Domain.Entities.Person>(GetAllPersonsQuery.Query, transaction: _transactionManager.GetCurrentTransaction());
+            return await _context.Set<Domain.Entities.Person>().ToListAsync();
         }
 
         public async Task<Domain.Entities.Person> GetPersonByKeyAsync(string key)
         {
-            var result = await _connection.QueryAsync<Domain.Entities.Person>(GetPersonByKeyQuery.Query, new { Key = key }, _transactionManager.GetCurrentTransaction());
-
-            return result.FirstOrDefault();
+            return await _context.Set<Domain.Entities.Person>().FirstOrDefaultAsync(p => p.Key == key);
         }
 
         public async Task UpdatePersonAsync(Domain.Entities.Person person, string key)
         {
-            await _connection.QueryAsync(UpdatePersonQuery.Query, new { Name = person.Name, Age = person.Age, Key = key }, _transactionManager.GetCurrentTransaction());
+            person.Key = key;
+
+            await Task.Run(() => _context.Entry(person).State = EntityState.Modified);
         }
     }
 }

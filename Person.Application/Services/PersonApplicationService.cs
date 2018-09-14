@@ -8,29 +8,32 @@ namespace Person.Application.Services
 {
     public class PersonApplicationService : IPersonApplicationService
     {
-        private readonly IPersonRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public PersonApplicationService(IPersonRepository repository)
+        public PersonApplicationService(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task CreatePersonAsync(Domain.Entities.Person person)
         {
             ValidatePerson(person);
 
-            await _repository.CreatePersonAsync(person);
+            await _unitOfWork.PersonRepository.CreatePersonAsync(person);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task DeletePersonAsync(string key)
         {
             if (key != null)
-                await _repository.DeletePersonAsync(key);
+                await _unitOfWork.PersonRepository.DeletePersonAsync(key);
+
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Domain.Entities.Person>> GetAllPersonsAsync()
         {
-            return await _repository.GetAllPersonsAsync();
+            return await _unitOfWork.PersonRepository.GetAllPersonsAsync();
         }
 
         public async Task<Domain.Entities.Person> GetPersonByKeyAsync(string key)
@@ -38,7 +41,7 @@ namespace Person.Application.Services
             if (key == null)
                 return null;
 
-            return await _repository.GetPersonByKeyAsync(key);
+            return await _unitOfWork.PersonRepository.GetPersonByKeyAsync(key);
         }
 
         public async Task UpdatePersonAsync(Domain.Entities.Person person, string key)
@@ -48,7 +51,8 @@ namespace Person.Application.Services
 
             ValidatePerson(person);
 
-            await _repository.UpdatePersonAsync(person, key);
+            await _unitOfWork.PersonRepository.UpdatePersonAsync(person, key);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         private static void ValidatePerson(Domain.Entities.Person person)
