@@ -18,6 +18,7 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.0.1985401" />
+    <PackageReference Include="NLog" Version="4.5.9" />
     <PackageReference Include="Swashbuckle.AspNetCore.Examples" Version="2.9.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="3.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="3.0.0" />
